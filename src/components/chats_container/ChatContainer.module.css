@@ -1,0 +1,9 @@
+.chat__container{
+    flex: 1;
+    overflow: scroll;
+    margin: auto 10px;
+    display:flex;
+    flex-direction: column-reverse;
+    gap: 10px;
+
+}
