@@ -1,34 +1,20 @@
-import style from "./App.module.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import PersonTile from "./components/person_tile/PersonTile";
-import SendChatForm from "./components/send_chat_form/SendChatForm";
-import ChatContainer from "./components/chats_container/ChatContainer";
-
+import ChatsPage from "./pages/chat_screen/page";
+import AuthPage, {AuthAction} from "./pages/auth_screen/page";
 
 
+
+const router = createBrowserRouter(
+  [
+    {path:"/chats", element: <ChatsPage/>},
+    {path:"/auth", element: <AuthPage/>, action:AuthAction},
+  ]
+)
 
 function App() {
   return (
-    <div className={style.chat_view}>
-      <div className={style.side__panel}>
-        <PersonTile current/>        
-        <PersonTile/>        
-        <PersonTile/>        
-        <PersonTile/>        
-        <PersonTile/>        
-        <PersonTile/>        
-        <PersonTile/>        
-        <PersonTile/>        
-        <PersonTile/>        
-        <PersonTile/>        
-        <PersonTile/>        
-        <PersonTile/>        
-      </div>
-      <div className={style.chat__screen}>
-          <ChatContainer/>
-          <SendChatForm/>
-      </div>
-    </div>
+    <RouterProvider router={router}/>
   );
 }
 

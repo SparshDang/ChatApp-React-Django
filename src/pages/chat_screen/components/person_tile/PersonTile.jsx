@@ -2,7 +2,7 @@ import React from "react";
 
 import style from './PersonTile.module.css';
 
-import profile_img from "../../test_assets/profile_pic.jpeg";
+import profile_img from "../../../../test_assets/profile_pic.jpeg";
 
 export default function PersonTile({current}) {
   return (
