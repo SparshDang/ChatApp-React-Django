@@ -1,20 +1,19 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import ChatsPage from "./pages/chat_screen/page";
-import AuthPage, {AuthAction} from "./pages/auth_screen/page";
+import AuthPage from "./pages/auth_screen/page";
+import AuthProvider from "./context/AuthProvider";
 
-
-
-const router = createBrowserRouter(
-  [
-    {path:"/chats", element: <ChatsPage/>},
-    {path:"/auth", element: <AuthPage/>, action:AuthAction},
-  ]
-)
+const router = createBrowserRouter([
+  { path: "/chats", element: <ChatsPage /> },
+  { path: "/auth", element: <AuthPage /> },
+]);
 
 function App() {
   return (
-    <RouterProvider router={router}/>
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   );
 }
 

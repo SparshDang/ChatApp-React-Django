@@ -1,78 +1,62 @@
-import React, {useRef} from "react";
+import React, {useRef, useContext} from "react";
 import { Form, useNavigate } from "react-router-dom";
 
+import authContext from "../../context/AuthContext";
+
 export default function AuthPage() {
-    const usernameRef = useRef();
-    const passwordRef = useRef();
+  const context = useContext(authContext);
+    const loginUsernameRef = useRef();
+    const loginPasswordRef = useRef();
+
+    const registerUsernameRef = useRef();
+    const registerNameRef = useRef();
+    const registerEmailRef = useRef();
+    const registerPasswordRef = useRef();
+
     const navigator = useNavigate()
 
     const onLoginSubmit = async (event) => {
         event.preventDefault();
-        const url = process.env.REACT_APP_API_URL + 'login';
-        const req = await fetch(url, {
-          method:'POST',
-          body:JSON.stringify( {
-            username:usernameRef.current.value,
-            password:passwordRef.current.value,
-          }),
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
+        await context.loginHandler({
+          username:loginUsernameRef.current.value,
+          password:loginPasswordRef.current.value,
         })
-        const response = await req.json()
-        console.log('fd')
-        if( response.status === 200){
-            navigator("/chats")
-        }
-
+        navigator("/chats")
     }
 
+    const onRegistrationSubmit = async (event) => {  
+      event.preventDefault()
+
+      const data = {
+        username:registerUsernameRef.current.value,
+        name:registerNameRef.current.value,
+        email:registerEmailRef.current.value,
+        password:registerPasswordRef.current.value
+      }
+      context.registerHandler(data)
+    }
 
   return (
     <>
-    <Form method="post">
-      <input type="text" name="username" id="username" placeholder="username" />
-      <input type="text" name="email" id="email" placeholder="email" />
-      <input type="text" name="name" id="name" placeholder="name" />
+    <Form method="post" onSubmit={onRegistrationSubmit}>
+      <input type="text" name="username" id="username" placeholder="username" ref={registerUsernameRef} />
+      <input type="text" name="email" id="email" placeholder="email" ref={registerEmailRef}/>
+      <input type="text" name="name" id="name" placeholder="name" ref={registerNameRef} />
       <input
         type="password"
         name="password"
         id="password"
         placeholder="password"
+        ref={registerPasswordRef}
       />
       <input type="submit" value="Register" />
     </Form>
 
     <form method="post" onSubmit={onLoginSubmit}>
-        <input type="text" name="username" id='name' ref={usernameRef}/>
-        <input type="password" name="password" id='password' ref={passwordRef}/>
+        <input type="text" name="username" id='name' ref={loginUsernameRef}/>
+        <input type="password" name="password" id='password' ref={loginPasswordRef}/>
         <input type="submit" value="Log in" />
     </form>
     </>
   );
 }
-
-export const AuthAction = async ({ params, request }) => {
-  const formData = await request.formData();
-  console.log(formData)
-  const jsonData=  {
-    name:formData.get('name'),
-    username:formData.get('username'),
-    email:formData.get('email'),
-    password:formData.get('password')
-  }
-  console.log(jsonData)
-  const url = process.env.REACT_APP_API_URL + 'register';
-  const req = await fetch(url, {
-    method:'POST',
-    body: JSON.stringify(jsonData),
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-  })
-  const response = await req.json()
-  console.log(response)
-  return null;
-};
