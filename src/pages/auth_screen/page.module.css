@@ -1,0 +1,18 @@
+.forms__container{
+    border: 3px solid green;
+    margin: 10px auto;
+    gap: 10px;
+    border-radius: 10px;
+    width: min-content;
+    padding:20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.helper{
+    color: green;
+    text-decoration: underline;
+    cursor: pointer;
+
+}

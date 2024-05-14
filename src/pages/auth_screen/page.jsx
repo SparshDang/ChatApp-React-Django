@@ -1,62 +1,31 @@
-import React, {useRef, useContext} from "react";
-import { Form, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 
-import authContext from "../../context/AuthContext";
+import LoginForm from "./components/LoginForm";
+import RegisterForm from "./components/RegisterForm";
+
+import style from './page.module.css';
 
 export default function AuthPage() {
-  const context = useContext(authContext);
-    const loginUsernameRef = useRef();
-    const loginPasswordRef = useRef();
-
-    const registerUsernameRef = useRef();
-    const registerNameRef = useRef();
-    const registerEmailRef = useRef();
-    const registerPasswordRef = useRef();
-
-    const navigator = useNavigate()
-
-    const onLoginSubmit = async (event) => {
-        event.preventDefault();
-        await context.loginHandler({
-          username:loginUsernameRef.current.value,
-          password:loginPasswordRef.current.value,
-        })
-        navigator("/chats")
-    }
-
-    const onRegistrationSubmit = async (event) => {  
-      event.preventDefault()
-
-      const data = {
-        username:registerUsernameRef.current.value,
-        name:registerNameRef.current.value,
-        email:registerEmailRef.current.value,
-        password:registerPasswordRef.current.value
-      }
-      context.registerHandler(data)
-    }
+  const [isLogin, setIsLogin] = useState(true);
 
   return (
-    <>
-    <Form method="post" onSubmit={onRegistrationSubmit}>
-      <input type="text" name="username" id="username" placeholder="username" ref={registerUsernameRef} />
-      <input type="text" name="email" id="email" placeholder="email" ref={registerEmailRef}/>
-      <input type="text" name="name" id="name" placeholder="name" ref={registerNameRef} />
-      <input
-        type="password"
-        name="password"
-        id="password"
-        placeholder="password"
-        ref={registerPasswordRef}
-      />
-      <input type="submit" value="Register" />
-    </Form>
+    <div className={style.forms__container}>
+      {isLogin &&
+      <>
+      <h2>Login</h2>
+      <LoginForm/>
+      <p>Not have account <span className={style.helper} onClick={() => setIsLogin((prev) => !prev)}>Sign In</span></p>
+      </> 
+      }
+      {!isLogin && 
+      <>
+      <h2>Register</h2>
 
-    <form method="post" onSubmit={onLoginSubmit}>
-        <input type="text" name="username" id='name' ref={loginUsernameRef}/>
-        <input type="password" name="password" id='password' ref={loginPasswordRef}/>
-        <input type="submit" value="Log in" />
-    </form>
-    </>
+      <RegisterForm/>
+      <p>Already have account <span className={style.helper} onClick={() => setIsLogin((prev) => !prev)}>Login</span></p>
+
+      </>
+      }
+    </div>
   );
 }
