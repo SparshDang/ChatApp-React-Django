@@ -22,11 +22,11 @@ const errorReducer = (state, action) => {
   return state;
 };
 
-export default function RegisterForm() {
+export default function RegisterForm({changeToLoginState}) {
   const context = useContext(authContext);
   const [errorState, errorDispach] = useReducer(errorReducer, {
     hasError: false,
-    errors: [],
+    errors: null,
   });
 
   const usernameRef = useRef();
@@ -47,15 +47,15 @@ export default function RegisterForm() {
     };
     try {
       await context.registerHandler(data);
+      changeToLoginState();
+      
     } catch (e) {
-      errorDispach({type:"ERROR", errors:[e]})
-      setTimeout(
-        () => {errorDispach({type:"RESET"})}, 5000
-      )
+      errorDispach({ type: "ERROR", errors: e });
+      setTimeout(() => {
+        errorDispach({ type: "RESET" });
+      }, 5000);
     }
   };
-
-
 
   return (
     <form method="post" onSubmit={onRegistrationSubmit} className={style.form}>
@@ -98,13 +98,11 @@ export default function RegisterForm() {
 
       {errorState.hasError &&
         errorState.errors.map((error, i) => {
-            console.log("Ge", error);
-            return createPortal(<ErrorBanner message={error.message} />, errorBannersDiv);
-        }
-        )
-        }
-
+          return createPortal(
+            <ErrorBanner message={error} />,
+            errorBannersDiv
+          );
+        })}
     </form>
-
   );
 }

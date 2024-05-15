@@ -21,7 +21,7 @@ export default function AuthPage() {
       <>
       <h2>Register</h2>
 
-      <RegisterForm/>
+      <RegisterForm changeToLoginState={() => setIsLogin(true)}/>
       <p>Already have account <span className={style.helper} onClick={() => setIsLogin((prev) => !prev)}>Login</span></p>
 
       </>

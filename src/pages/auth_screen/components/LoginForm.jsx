@@ -62,7 +62,6 @@ export default function LoginForm() {
       <input type="submit" value="Log in" className={style.action} />
       {errorState.hasError &&
         errorState.errors.map((error, i) => {
-          console.log("Ge", error);
           return createPortal(
             <ErrorBanner message={error.message} />,
             errorBannersDiv

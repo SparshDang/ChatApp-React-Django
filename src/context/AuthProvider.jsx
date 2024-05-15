@@ -1,4 +1,5 @@
 import React from 'react'
+
 import AuthContext from './AuthContext'
 
 export default function AuthProvider({children}) {
@@ -19,7 +20,13 @@ export default function AuthProvider({children}) {
     })
     const response = await req.json()
     if (response.status !== 200){
-      return
+      const errorsArray = []
+      Object.keys(response).forEach( (errorField) => {
+        response[errorField].forEach( (error) => {
+          errorsArray.push(`${errorField} : ${error}`)
+        })
+      })
+      throw errorsArray
     }
 
   }
@@ -41,6 +48,9 @@ export default function AuthProvider({children}) {
     const response = await req.json()
     if( response.status === 200){
       setUserData()
+    }
+    else{
+      throw Error(response.detail)
     }
 
   }
