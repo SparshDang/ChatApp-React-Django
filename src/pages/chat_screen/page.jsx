@@ -1,16 +1,18 @@
 import React, { useEffect, useState, useContext } from "react";
 import useWebSocket from "react-use-websocket";
+import { useNavigate} from "react-router-dom";
 
 import PersonTile from "./components/person_tile/PersonTile";
 import SendChatForm from "./components/send_chat_form/SendChatForm";
 import ChatContainer from "./components/chats_container/ChatContainer";
-import AuthContext from "../../context/AuthContext";
+import authContext from "../../context/AuthContext";
 
 import style from "./style.module.css";
 
 export default function ChatsPage() {
 
-  // const authContext = useContext(AuthContext);
+  const context = useContext(authContext);
+  const navigate = useNavigate();
 
   const [chatWith, setChatWith] = useState("sparsh");
   const url = `ws://${process.env.REACT_APP_API_URL}${chatWith}`;
@@ -20,6 +22,14 @@ export default function ChatsPage() {
   const onChatWithChange = (username) => {
     setChatWith(username);
   };
+
+  useEffect(
+    () => {
+      if (!context.userData.isAuthenticated){
+        navigate("/auth")
+      }
+    },[]
+  )
 
 
 

@@ -1,7 +1,8 @@
-import React, { useContext, useRef, useReducer } from "react";
+import React, { useContext, useRef, useReducer, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPortal } from "react-dom";
 
+import Loader from "../../../components/Loader";
 import ErrorBanner from "../../../components/ErrorBanner";
 import authContext from "../../../context/AuthContext";
 
@@ -29,6 +30,7 @@ export default function LoginForm() {
     hasError: false,
     errors: [],
   });
+  const [isLoading, setIsLoading] = useState(false)
 
   const usernameRef = useRef();
   const passwordRef = useRef();
@@ -38,20 +40,24 @@ export default function LoginForm() {
 
   const onLoginSubmit = async (event) => {
     event.preventDefault();
+    setIsLoading(true)
     try {
       await context.loginHandler({
         username: usernameRef.current.value,
         password: passwordRef.current.value,
       });
-      navigator("/chats");
+      navigator("/");
     } catch (e) {
       errorDispach({ type: "ERROR", errors: [e] });
       setTimeout(() => {
         errorDispach({ type: "RESET" });
       }, 5000);
     }
+    setIsLoading(false);
   };
   return (
+    <>
+    {isLoading && <Loader/>}
     <form method="post" onSubmit={onLoginSubmit} className={style.form}>
       <label htmlFor="username">Username:</label>
       <input type="text" name="username" id="username" ref={usernameRef} />
@@ -68,5 +74,6 @@ export default function LoginForm() {
           );
         })}
     </form>
+    </>
   );
 }

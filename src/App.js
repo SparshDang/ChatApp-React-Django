@@ -1,26 +1,38 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider
+} from "react-router-dom";
+import { useContext } from "react";
 
 import BasePage from "./pages/BasePage";
 import ChatsPage from "./pages/chat_screen/page";
 import AuthPage from "./pages/auth_screen/page";
-import AuthProvider from "./context/AuthProvider";
+import authContext from "./context/AuthContext";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <BasePage />,
-    children: [
-      { path: "/chats", element: <ChatsPage /> },
-      { path: "/auth", element: <AuthPage /> },
-    ],
-  },
-]);
 
 function App() {
+  const context = useContext(authContext);
+
+  const setUserHandler = async () => {
+    if (!context.userData.isAuthenticated){
+      await context.setUser()
+    }
+    return null
+  }
+
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <BasePage />,
+      children: [
+        { index: true, element: <ChatsPage />, loader:setUserHandler },
+        { path: "/auth", element: <AuthPage /> },
+      ],
+    },
+  ]);
+  
   return (
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+    <RouterProvider router={router} />
   );
 }
 

@@ -1,7 +1,8 @@
-import React, { useContext, useRef, useReducer } from "react";
+import React, { useContext, useRef, useReducer, useState } from "react";
 import { createPortal } from "react-dom";
 
 import ErrorBanner from "../../../components/ErrorBanner";
+import Loader from "../../../components/Loader";
 
 import style from "./Form.module.css";
 
@@ -22,12 +23,13 @@ const errorReducer = (state, action) => {
   return state;
 };
 
-export default function RegisterForm({changeToLoginState}) {
+export default function RegisterForm({ changeToLoginState }) {
   const context = useContext(authContext);
   const [errorState, errorDispach] = useReducer(errorReducer, {
     hasError: false,
     errors: null,
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const usernameRef = useRef();
   const nameRef = useRef();
@@ -39,6 +41,8 @@ export default function RegisterForm({changeToLoginState}) {
   const onRegistrationSubmit = async (event) => {
     event.preventDefault();
 
+    setIsLoading(true);
+
     const data = {
       username: usernameRef.current.value,
       name: nameRef.current.value,
@@ -48,61 +52,68 @@ export default function RegisterForm({changeToLoginState}) {
     try {
       await context.registerHandler(data);
       changeToLoginState();
-      
     } catch (e) {
       errorDispach({ type: "ERROR", errors: e });
       setTimeout(() => {
         errorDispach({ type: "RESET" });
       }, 5000);
     }
+    setIsLoading(false);
   };
 
   return (
-    <form method="post" onSubmit={onRegistrationSubmit} className={style.form}>
-      <label htmlFor="username">Username:</label>
-      <input
-        type="text"
-        name="username"
-        id="username"
-        placeholder="username"
-        ref={usernameRef}
-      />
-      <label htmlFor="email">Email:</label>
+    <>
+      {isLoading && <Loader />}
+      <form
+        method="post"
+        onSubmit={onRegistrationSubmit}
+        className={style.form}
+      >
+        <label htmlFor="username">Username:</label>
+        <input
+          type="text"
+          name="username"
+          id="username"
+          placeholder="username"
+          ref={usernameRef}
+        />
+        <label htmlFor="email">Email:</label>
 
-      <input
-        type="text"
-        name="email"
-        id="email"
-        placeholder="email"
-        ref={emailRef}
-      />
-      <label htmlFor="name">Name:</label>
+        <input
+          type="text"
+          name="email"
+          id="email"
+          placeholder="email"
+          ref={emailRef}
+        />
+        <label htmlFor="name">Name:</label>
 
-      <input
-        type="text"
-        name="name"
-        id="name"
-        placeholder="name"
-        ref={nameRef}
-      />
-      <label htmlFor="password">Password:</label>
+        <input
+          type="text"
+          name="name"
+          id="name"
+          placeholder="name"
+          ref={nameRef}
+        />
+        <label htmlFor="password">Password:</label>
 
-      <input
-        type="password"
-        name="password"
-        id="password"
-        placeholder="password"
-        ref={passwordRef}
-      />
-      <input type="submit" value="Register" className={style.action} />
+        <input
+          type="password"
+          name="password"
+          id="password"
+          placeholder="password"
+          ref={passwordRef}
+        />
+        <input type="submit" value="Register" className={style.action} />
 
-      {errorState.hasError &&
-        errorState.errors.map((error, i) => {
-          return createPortal(
-            <ErrorBanner message={error} />,
-            errorBannersDiv
-          );
-        })}
-    </form>
+        {errorState.hasError &&
+          errorState.errors.map((error, i) => {
+            return createPortal(
+              <ErrorBanner message={error} />,
+              errorBannersDiv
+            );
+          })}
+      </form>
+    </>
   );
 }

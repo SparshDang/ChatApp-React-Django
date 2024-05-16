@@ -1,82 +1,96 @@
-import React from 'react'
+import React, { useState } from "react";
 
-import AuthContext from './AuthContext'
+import AuthContext from "./AuthContext";
 
-export default function AuthProvider({children}) {
-  let userData = {
-    name:null,
-    username:null,
-    email:null
-  }
+export default function AuthProvider({ children }) {
+  let [userData, setUserDataState] = useState({
+    isAuthenticated:false
+  });
+
   const registerHandler = async (data) => {
-    const url = "http://"+process.env.REACT_APP_API_URL + 'register';
+    const url = "http://" + process.env.REACT_APP_API_URL + "register";
     const req = await fetch(url, {
-      method:'POST',
+      method: "POST",
       body: JSON.stringify(data),
       headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-    })
-    const response = await req.json()
-    if (response.status !== 200){
-      const errorsArray = []
-      Object.keys(response).forEach( (errorField) => {
-        response[errorField].forEach( (error) => {
-          errorsArray.push(`${errorField} : ${error}`)
-        })
-      })
-      throw errorsArray
-    }
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+    const response = await req.json();
 
-  }
+    if (response.status !== 200) {
+      const errorsArray = [];
+
+      Object.keys(response).forEach((errorField) => {
+        response[errorField].forEach((error) => {
+          errorsArray.push(`${errorField} : ${error}`);
+        });
+
+      });
+
+      throw errorsArray;
+    }
+  };
 
   const loginHandler = async (data) => {
-    const url = "http://"+process.env.REACT_APP_API_URL + 'login';
+    const url = "http://" + process.env.REACT_APP_API_URL + "login";
     const req = await fetch(url, {
-      method:'POST',
-      credentials:"include",
-      body:JSON.stringify( {
-        username:data.username,
-        password:data.password,
+      method: "POST",
+      credentials: "include",
+      body: JSON.stringify({
+        username: data.username,
+        password: data.password,
       }),
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
-    })
-    const response = await req.json()
-    if( response.status === 200){
-      setUserData()
+    });
+    const response = await req.json();
+    if (response.status === 200) {
+      await setUserData();
+    } else {
+      throw Error(response.detail);
     }
-    else{
-      throw Error(response.detail)
-    }
-
-  }
-
-
+  };
 
   const setUserData = async () => {
-    const url = "http://"+process.env.REACT_APP_API_URL + 'user';
+    const url = "http://" + process.env.REACT_APP_API_URL + "user";
     const request = await fetch(url, {
-      credentials:"include"
+      credentials: "include",
     });
-    const response = await request.json()
-    userData = {response, isAuthenticated:true};
+    const response = await request.json();
+    if (response.status === 200) {
+      const data = { ...response, isAuthenticated: true };
+      delete data.response;
+      setUserDataState(data);
+    } else {
+      if (userData.isAuthenticated) {
+        setUserDataState({ isAuthenticated: false });
+      }
+    }
+  };
 
-  }
+  const logoutHandler = async () => {
+    const url = "http://" + process.env.REACT_APP_API_URL + "logout";
+    await fetch(url, {
+      credentials: "include",
+    });
+    setUserDataState({isAuthenticated:false})
+  };
 
-  const value =     {
-    userData:userData,
-    setUser: setUserData,
-    logoutHandler : ()=>{},
-    loginHandler : loginHandler,
-    registerHandler : registerHandler
-}
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider
+      value={{
+        userData: userData,
+        setUser: setUserData,
+        logoutHandler: logoutHandler,
+        loginHandler: loginHandler,
+        registerHandler: registerHandler,
+      }}
+    >
       {children}
     </AuthContext.Provider>
-  )
+  );
 }
