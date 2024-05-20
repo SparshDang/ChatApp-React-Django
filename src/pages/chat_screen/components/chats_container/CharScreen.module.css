@@ -1,0 +1,10 @@
+.chat__screen {
+  flex: 4;
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+}

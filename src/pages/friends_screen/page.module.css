@@ -1,0 +1,12 @@
+.heading{
+    margin: 10px;
+    font-size: 2rem;
+}
+
+.friends__container{
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 10px;
+    margin: auto 10px;
+
+}

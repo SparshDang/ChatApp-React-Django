@@ -7,11 +7,7 @@
   border-top: 1px solid grey;
   border-right: 3px solid grey;
   background-color: rgba(231, 231, 231, 0.8);
-
-}
-
-.person_tile:hover {
-  /* background-color: rgba(126, 126, 126, 0.5); */
+  cursor: pointer;
 }
 
 .profile_img {
@@ -24,6 +20,6 @@
 }
 
 .current {
-  background-color:white ;
+  background-color: white;
   border-right: none;
 }
