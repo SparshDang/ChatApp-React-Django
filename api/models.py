@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
+
+
 class User(AbstractUser):
     name = models.CharField(max_length=60)
     email = models.EmailField(unique=True, null=False)
@@ -10,3 +12,13 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['name', 'email']
+
+
+class Friend(models.Model):
+    person1 = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_query_name="person1", related_name="person1")
+    person2 = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_query_name="person2", related_name="person2")
+
+    def __str__(self) -> str:
+        return f"{self.person1}-{self.person2}"
