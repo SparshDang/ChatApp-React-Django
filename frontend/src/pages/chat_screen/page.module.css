@@ -1,0 +1,79 @@
+.secondary__header{
+    position: absolute;
+    right: 10px;
+    left: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.friend__username{
+    margin: auto;
+}
+
+
+.back__btn{
+    margin-top: 10px;
+    border: 2px solid green;
+    font-size: 1rem;
+    border-radius: 5px;
+    background-color: white;
+    cursor: pointer;
+
+}
+
+
+.chat__page{
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+}
+
+.chats__container{
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 10px;
+    overflow-y: scroll;
+    flex: 1;
+}
+
+.send__form{
+    font-size: 2rem;
+    border: 2px solid #00ae03;
+}
+
+.send__form > form{
+    display: flex;
+}
+
+.msg__input{
+    flex: 1;
+    font-weight: 400;
+    font-size: 1rem;
+    outline: none;
+    border: none;
+}
+
+.send__btn{
+    background-color: #00ae03;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 0.5rem;
+    font-size: 1.2rem;
+    display: grid;
+    place-items: center
+    ;
+}
+
+.send__btn > *{
+    margin: 0;
+    padding: 0;
+}
+

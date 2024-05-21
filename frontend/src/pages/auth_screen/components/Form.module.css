@@ -1,0 +1,25 @@
+.form{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form, .form>input{
+    font-size: 1.4rem;
+}
+
+
+.form>input{
+    outline: none;
+    font-weight: 100;
+    border: 3px solid green;
+    border-radius: 5px;
+}
+
+.action{
+    align-self: flex-end;
+    width: 7rem;
+    background: transparent;
+    border: 3px solid green;
+    border-radius: 5px;
+}

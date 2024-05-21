@@ -1,0 +1,48 @@
+.modal{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(62, 62, 62, 0.6);
+}
+
+.form__container{
+    background-color: white;
+    border: 3px solid #00ae03;
+    width: min-content;
+
+    padding: 1rem;
+    border-radius: 10px;
+
+    margin: 10px auto;
+
+}
+
+.form__container > form{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.input{
+    width: 20rem;
+    padding: 5px;
+    outline: none;
+    border: 2px solid green;
+
+}
+
+.actions{
+    display: flex;
+    justify-content: end;
+    gap: 10px;
+}
+
+.actions > button{
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 1.3rem;
+    background-color: transparent;
+    border: 2px solid #00ae03;
+}

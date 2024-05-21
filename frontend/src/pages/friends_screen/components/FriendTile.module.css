@@ -1,0 +1,22 @@
+.tile{
+    border: 1px solid rgba(193, 193, 193, 0.621);
+    border-radius: 5px;
+    height: 100px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: all 200ms ;
+}
+
+.tile:hover{
+    background-color: #00ae03;
+    color: white;
+}
+
+.tile > h3{
+    margin: 0;
+    padding: 0;
+    font-size: 2rem;
+    font-weight: 400;
+}
