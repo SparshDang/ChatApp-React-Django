@@ -40,7 +40,7 @@ class LoginView(APIView):
             )
 
         if not user:
-            raise AuthenticationFailed("user not found")
+            raise AuthenticationFailed("User not found")
 
         if not user.check_password(data['password']):
             raise AuthenticationFailed("Password is incorrect")
@@ -144,7 +144,6 @@ class  GetMessagesView(APIView):
         socket = data['socket']
 
         messages = Message.objects.filter(socket=socket).order_by("-time_stamp")[:10]
-        messages.delete()
         messageSerializer = MessageSerializer(messages, many=True)
         return Response(
             messageSerializer.data
