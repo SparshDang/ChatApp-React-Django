@@ -32,39 +32,76 @@ export default function ChatPage() {
   };
 
   const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState("")
+  const [message, setMessage] = useState("");
 
-  useEffect(
-    () => {
-      if (lastMessage){
-        const data = JSON.parse(lastMessage.data);
-        setMessages(prev => { return [ data,...prev]})
-      }
-    }, [lastMessage]
-  )
+  const fetchLatest10Messages = async () => {
+    const url = "http://" + process.env.REACT_APP_API_URL + "messages";
+    const request = await fetch(url, {
+      method:"POST",
+      body: JSON.stringify({
+        socket: websocketEndPoint,
+      }),
+      credentials:"include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await request.json();
+    console.log(data)
+    setMessages(data);
+
+  };
+
+  useEffect(() => {
+    fetchLatest10Messages();
+  }, []);
+
+
+  useEffect(() => {
+    if (lastMessage) {
+      const data = JSON.parse(lastMessage.data);
+      setMessages((prev) => {
+        return [data, ...prev];
+      });
+    }
+  }, [lastMessage]);
 
   const sendMessageHandler = (event) => {
     event.preventDefault();
-    sendMessage(JSON.stringify({
-      username:context.userData.username,
-      "message":message
-    }))
+    sendMessage(
+      JSON.stringify({
+        username: context.userData.username,
+        message: message,
+      })
+    );
 
     setMessage("");
-
-  }
+  };
 
   return (
     <>
       <div className={style.chat__page}>
         <div className={style.chats__container}>
-          {messages.map((data,index) => {
-            return <ChatBubble key={index} data={data} user={context.userData.username}/>
+          {messages.map((data, index) => {
+            return (
+              <ChatBubble
+                key={index}
+                data={data}
+                user={context.userData.username}
+              />
+            );
           })}
         </div>
         <div className={style.send__form}>
           <form onSubmit={sendMessageHandler}>
-            <input type="text" className={style.msg__input} onChange={(event) => setMessage(event.target.value) } value={message}/>
+            <input
+              type="text"
+              className={style.msg__input}
+              onChange={(event) => setMessage(event.target.value)}
+              value={message}
+            />
             <button type="submit" className={style.send__btn}>
               <IoSend />
             </button>
