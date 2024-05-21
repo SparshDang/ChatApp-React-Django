@@ -21,12 +21,6 @@ export default function ChatPage() {
     "ws://" + process.env.REACT_APP_API_URL + `api/${websocketEndPoint}`
   );
 
-  useEffect(() => {
-    if (!context.userData.isAuthenticated) {
-      navigate("/auth");
-    }
-  }, [navigate, context]);
-
   const backBtnHandler = () => {
     navigate("/");
   };
@@ -37,11 +31,11 @@ export default function ChatPage() {
   const fetchLatest10Messages = async () => {
     const url = "http://" + process.env.REACT_APP_API_URL + "messages";
     const request = await fetch(url, {
-      method:"POST",
+      method: "POST",
       body: JSON.stringify({
         socket: websocketEndPoint,
       }),
-      credentials:"include",
+      credentials: "include",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -49,15 +43,18 @@ export default function ChatPage() {
     });
 
     const data = await request.json();
-    console.log(data)
     setMessages(data);
-
   };
+
+  useEffect(() => {
+    if (!context.userData.isAuthenticated) {
+      navigate("/auth");
+    }
+  }, [navigate, context]);
 
   useEffect(() => {
     fetchLatest10Messages();
   }, []);
-
 
   useEffect(() => {
     if (lastMessage) {
@@ -70,6 +67,9 @@ export default function ChatPage() {
 
   const sendMessageHandler = (event) => {
     event.preventDefault();
+    if (message.trim() === "") {
+      return;
+    }
     sendMessage(
       JSON.stringify({
         username: context.userData.username,
@@ -108,9 +108,12 @@ export default function ChatPage() {
           </form>
         </div>
       </div>
-      <button className={style.back__btn} onClick={backBtnHandler}>
-        Back
-      </button>
+      <div className={style.secondary__header}>
+        <h2 className={style.friend__username}>{friend}</h2>
+        <button className={style.back__btn} onClick={backBtnHandler}>
+          Back
+        </button>
+      </div>
     </>
   );
 }

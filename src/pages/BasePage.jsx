@@ -22,6 +22,9 @@ export default function BasePage() {
             <h1 className={style.heading}>Chat App</h1>
           </div>
           <div className={style.trailing}>
+            {context.userData.isAuthenticated && (
+              <div className={style.id}>Welcome, {context.userData.name}</div>
+            )}
             {!context.userData.isAuthenticated ? (
               <Link to="/auth" className={style.action_btn}>
                 Login

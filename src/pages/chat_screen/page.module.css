@@ -1,6 +1,18 @@
-.back__btn{
+.secondary__header{
     position: absolute;
     right: 10px;
+    left: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.friend__username{
+    margin: auto;
+}
+
+
+.back__btn{
     margin-top: 10px;
     border: 2px solid green;
     font-size: 1rem;

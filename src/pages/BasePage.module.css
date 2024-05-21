@@ -33,3 +33,15 @@
     flex: 1;
 }
 
+.trailing{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    color: white;
+}
+
+.id{
+    font-size: 1.3rem;
+    text-transform: capitalize;
+}

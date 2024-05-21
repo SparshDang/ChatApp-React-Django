@@ -74,7 +74,6 @@ export default function RegisterForm({ changeToLoginState }) {
           type="text"
           name="username"
           id="username"
-          placeholder="username"
           ref={usernameRef}
         />
         <label htmlFor="email">Email:</label>
@@ -83,7 +82,6 @@ export default function RegisterForm({ changeToLoginState }) {
           type="text"
           name="email"
           id="email"
-          placeholder="email"
           ref={emailRef}
         />
         <label htmlFor="name">Name:</label>
@@ -92,7 +90,6 @@ export default function RegisterForm({ changeToLoginState }) {
           type="text"
           name="name"
           id="name"
-          placeholder="name"
           ref={nameRef}
         />
         <label htmlFor="password">Password:</label>
@@ -101,7 +98,6 @@ export default function RegisterForm({ changeToLoginState }) {
           type="password"
           name="password"
           id="password"
-          placeholder="password"
           ref={passwordRef}
         />
         <input type="submit" value="Register" className={style.action} />
