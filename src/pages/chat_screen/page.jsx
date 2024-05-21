@@ -1,45 +1,79 @@
-import React, { useEffect, useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import useWebSocket from "react-use-websocket";
+import { IoSend } from "react-icons/io5";
 
-import PersonTile from "./components/person_tile/PersonTile";
-import ChatScreen from "./components/chats_container/ChatScreen";
 import authContext from "../../context/AuthContext";
+import ChatBubble from "./components/ChatBubble";
 
-import style from "./style.module.css";
+import style from "./page.module.css";
 
-export default function ChatsPage() {
+export default function ChatPage() {
   const context = useContext(authContext);
   const navigate = useNavigate();
 
-  const [chatWith, setChatWith] = useState("");
-
-  const onChatWithChange = (username) => {
-    setChatWith(username);
-  };
+  const params = useParams();
+  const friend = params.friend;
+  const websocketEndPoint = [context.userData.username, friend]
+    .sort()
+    .join("-");
+  const { sendMessage, lastMessage } = useWebSocket(
+    "ws://" + process.env.REACT_APP_API_URL + `api/${websocketEndPoint}`
+  );
 
   useEffect(() => {
     if (!context.userData.isAuthenticated) {
       navigate("/auth");
     }
-  }, []);
+  }, [navigate, context]);
+
+  const backBtnHandler = () => {
+    navigate("/");
+  };
+
+  const [messages, setMessages] = useState([]);
+  const [message, setMessage] = useState("")
+
+  useEffect(
+    () => {
+      if (lastMessage){
+        const data = JSON.parse(lastMessage.data);
+        setMessages(prev => { return [ data,...prev]})
+      }
+    }, [lastMessage]
+  )
+
+  const sendMessageHandler = (event) => {
+    event.preventDefault();
+    sendMessage(JSON.stringify({
+      username:context.userData.username,
+      "message":message
+    }))
+
+    setMessage("");
+
+  }
 
   return (
-    <div className={style.chat_view}>
-      <div className={style.side__panel}>
-        <PersonTile onClickHandler={onChatWithChange} current />
-        <PersonTile onClickHandler={onChatWithChange} />
-        <PersonTile onClickHandler={onChatWithChange} />
-        <PersonTile onClickHandler={onChatWithChange} />
-        <PersonTile onClickHandler={onChatWithChange} />
-        <PersonTile onClickHandler={onChatWithChange} />
-        <PersonTile onClickHandler={onChatWithChange} />
-        <PersonTile onClickHandler={onChatWithChange} />
-        <PersonTile onClickHandler={onChatWithChange} />
-        <PersonTile onClickHandler={onChatWithChange} />
-        <PersonTile onClickHandler={onChatWithChange} />
-        <PersonTile onClickHandler={onChatWithChange} />
+    <>
+      <div className={style.chat__page}>
+        <div className={style.chats__container}>
+          {messages.map((data,index) => {
+            return <ChatBubble key={index} data={data} user={context.userData.username}/>
+          })}
+        </div>
+        <div className={style.send__form}>
+          <form onSubmit={sendMessageHandler}>
+            <input type="text" className={style.msg__input} onChange={(event) => setMessage(event.target.value) } value={message}/>
+            <button type="submit" className={style.send__btn}>
+              <IoSend />
+            </button>
+          </form>
+        </div>
       </div>
-      {chatWith && <ChatScreen chatWith={chatWith}/>}
-    </div>
+      <button className={style.back__btn} onClick={backBtnHandler}>
+        Back
+      </button>
+    </>
   );
 }

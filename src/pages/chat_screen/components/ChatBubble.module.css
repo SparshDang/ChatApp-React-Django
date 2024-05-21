@@ -1,0 +1,23 @@
+.bubble{
+    max-width: 50%;
+    word-break: break-all;
+    width: fit-content;
+    padding: 10px;
+    font-weight: 500;
+    border: 3px solid green;
+    color: black;
+    border-radius: 10px ;
+    background-color: greenyellow;
+}
+
+.send{
+    background-color: greenyellow;
+    border: 3px solid green;
+    align-self: start;
+}
+
+.recieve{
+    background-color: white;
+    border: 3px solid black;
+    align-self: end;
+}

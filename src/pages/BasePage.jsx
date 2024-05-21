@@ -15,25 +15,29 @@ export default function BasePage() {
   };
 
   return (
-    <div>
-      <header className={style.header}>
-        <div className={style.leading}>
-          <h1 className={style.heading}>Chat App</h1>
+    <>
+      <div className={style.page}>
+        <header className={style.header}>
+          <div className={style.leading}>
+            <h1 className={style.heading}>Chat App</h1>
+          </div>
+          <div className={style.trailing}>
+            {!context.userData.isAuthenticated ? (
+              <Link to="/auth" className={style.action_btn}>
+                Login
+              </Link>
+            ) : (
+              <Link onClick={logoutHandler} className={style.action_btn}>
+                Log Out
+              </Link>
+            )}
+          </div>
+        </header>
+        <div id="error-banners"></div>
+        <div className={style.content}>
+          <Outlet />
         </div>
-        <div className={style.trailing}>
-          {!context.userData.isAuthenticated ? (
-            <Link to="/auth" className={style.action_btn}>
-              Login
-            </Link>
-          ) : (
-            <Link onClick={logoutHandler} className={style.action_btn}>
-              Log Out
-            </Link>
-          )}
-        </div>
-      </header>
-      <div id="error-banners"></div>
-      <Outlet />
-    </div>
+      </div>
+    </>
   );
 }
