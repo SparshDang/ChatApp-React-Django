@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 
-from api.models import User
+from api.models import User, Message
 
 class UserSerializer(ModelSerializer):
     class Meta:
@@ -17,3 +17,9 @@ class UserSerializer(ModelSerializer):
             user_instance.set_password(password)
         user_instance.save()
         return user_instance
+
+class MessageSerializer(ModelSerializer):
+    class Meta:
+        model = Message
+        fields = ['username', 'message']
+        

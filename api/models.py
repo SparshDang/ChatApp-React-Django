@@ -22,3 +22,10 @@ class Friend(models.Model):
 
     def __str__(self) -> str:
         return f"{self.person1}-{self.person2}"
+
+
+class Message(models.Model):
+    socket = models.CharField(max_length=200)
+    username = models.CharField(max_length=60)
+    message = models.TextField()
+    time_stamp = models.DateTimeField(auto_created=True, auto_now=True)

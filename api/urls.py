@@ -9,4 +9,5 @@ urlpatterns = [
     path('user', UserView.as_view()),
     path('add-friend', AddFriendView.as_view()),
     path('friends', GetFriendView.as_view()),
+    path('messages', GetMessagesView.as_view()),
 ]

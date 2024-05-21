@@ -8,8 +8,8 @@ import time
 import datetime
 import jwt
 
-from api.serializers import UserSerializer
-from api.models import User, Friend
+from api.serializers import UserSerializer, MessageSerializer
+from api.models import User, Friend, Message
 
 
 class RegisterView(APIView):
@@ -94,7 +94,7 @@ class AddFriendView(APIView):
         friend_username = data['friend']
         try:
             friend = User.objects.get(username=friend_username)
-        except Exception as e:
+        except Exception:
             raise ValidationError("Wrong Username")
 
         is_already_friend = Friend.objects.filter(
@@ -108,6 +108,7 @@ class AddFriendView(APIView):
         return Response(
             {
                 "friend": str(friends_instance),
+                "status":200
             }
         )
 
@@ -115,18 +116,41 @@ class AddFriendView(APIView):
 class GetFriendView(APIView):
     def get(self, request):
         token = request.COOKIES.get("jwt", None)
-        id = jwt.decode(token, key='secret', algorithms=["HS256"])['id']
-        user = User.objects.get(pk=id)
+        if token:
+            id = jwt.decode(token, key='secret', algorithms=["HS256"])['id']
+            user = User.objects.get(pk=id)
 
-        friend_objects = Friend.objects.filter(
-            Q(person1=user) | Q(person2=user))
-        friends = []
-        for friend in friend_objects:
-            if friend.person1 == user:
-                friends.append(friend.person2.username)
-            else:
-                friends.append(friend.person1.username)
+            friend_objects = Friend.objects.filter(
+                Q(person1=user) | Q(person2=user))
+            friends = []
+            for friend in friend_objects:
+                if friend.person1 == user:
+                    friends.append(friend.person2.username)
+                else:
+                    friends.append(friend.person1.username)
 
+            return Response(
+                friends
+            )
+        raise AuthenticationFailed("Not authenticated")
+    
+class  GetMessagesView(APIView):
+    def post(self, request):
+        token = request.COOKIES.get("jwt", None)
+        if not token:
+            raise AuthenticationFailed("Not authenticated")
+        
+        data = request.data
+        socket = data['socket']
+
+        messages = Message.objects.filter(socket=socket).order_by("-time_stamp")[:10]
+        messages.delete()
+        messageSerializer = MessageSerializer(messages, many=True)
         return Response(
-            friends
+            messageSerializer.data
         )
+
+
+
+
+
