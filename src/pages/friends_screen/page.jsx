@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import FriendTile from "./components/FriendTile";
+import AddFriendModal from "./components/AddFriendModal";
 import authContext from "../../context/AuthContext";
 
 import style from "./page.module.css";
@@ -12,6 +13,7 @@ export default function FriendsPage() {
   const navigate = useNavigate();
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [addModalOpen, setaddModalOpen] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -20,7 +22,7 @@ export default function FriendsPage() {
     }
     getFriends();
     setLoading(false);
-  }, [navigate,context]);
+  }, [navigate, context]);
 
   const getFriends = async () => {
     const url = "http://" + process.env.REACT_APP_API_URL + "friends";
@@ -35,12 +37,25 @@ export default function FriendsPage() {
 
   return (
     <>
+      {addModalOpen && (
+        <AddFriendModal
+          closeModal={() => {
+            setaddModalOpen(false);
+            getFriends();
+          }}
+        />
+      )}
       {loading && <Loader />}
       <h2 className={style.heading}>Friends</h2>
       <div className={style.friends__container}>
-        {friends.map((friend,index) => {
-          return <FriendTile username={friend} key={index}/>
+        {friends.map((friend, index) => {
+          return <FriendTile username={friend} key={index} />;
         })}
+        <FriendTile
+          username="+"
+          openModal={() => setaddModalOpen(true)}
+          isAddFriendTile
+        />
       </div>
     </>
   );
